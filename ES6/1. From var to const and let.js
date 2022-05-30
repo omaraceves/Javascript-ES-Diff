@@ -7,6 +7,7 @@
 
 var myNumber = 3;
 function func(randomize) {
+    console.log(myNumber); //undefined
     if (randomize) {
         var myNumber = Math.random();
         return myNumber;
@@ -22,6 +23,7 @@ console.log(result); //undefined
 var myNumber = 3;
 function func(randomize) {
     var myNumber;
+    console.log(myNumber); //undefined
     if (randomize) {
         myNumber = Math.random();
         return myNumber;
@@ -40,6 +42,7 @@ console.log(result); //undefined
 
 let myNumber = 3;
 function func(randomize) {
+    console.log(myNumber); //3
     if (randomize) {
         let myNumber = Math.random();
         return myNumber;
