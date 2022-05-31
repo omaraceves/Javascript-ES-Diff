@@ -48,5 +48,86 @@ myFunction();
 //Again this is a consequence of Javascript function scope variables.
 
 //var 2: hoisting declarations
+//as seen on: https://developer.mozilla.org/en-US/docs/Glossary/Hoisting
+//In javascript a javascript function variable declarations are always moved to the top of the function
 
+function myFunction() {
+    console.log(car); //undefined
+    if(true) {
+        var car = '718 Cayman';
+    }
+}
+myFunction();
 
+//On the snipped above Javascript will do something like:
+ 
+function myFunction() {
+    var car;
+    console.log(car); //undefined
+    if(true) {
+        var car = '718 Cayman';
+    }
+}
+myFunction();
+
+//var hoisting declaration also occurs outside of functions
+
+console.log(car); //undefined
+var car = 'Porsche Cayman';
+
+//when you don't declare the variable, no hoisting occurs, the variable doesn't exists
+//therefore we get a reference error
+
+console.log(car); //ReferenceError: car is not defined
+
+//function hoisting can happen outside of a function:
+
+printMyPorsche(); //Porsche Cayman 718
+
+function printMyPorsche() {
+    console.log('Porsche Cayman 718');
+}
+
+//Function declaration hoisting occurs within a function
+//But it is slightly different than with variables
+
+function myFunction() {
+    printMyPorsche(); //Porsche Cayman 718
+    
+    function printMyPorsche() {
+        console.log('Porsche Cayman 718');
+    }
+}
+
+myFunction();
+
+//However function hoisting occurs precisely on the block it was declared
+
+function myFunction() {
+    printMyPorsche(); //TypeError: printMyPorsche is not a function
+    
+    if(true) {
+        function printMyPorsche() {
+            console.log('Porsche Cayman 718');
+        }
+    }
+}
+
+myFunction();
+
+//Now calling the function within the same block it was declared
+
+function myFunction() {
+    
+    if(true) {
+        printMyPorsche(); //Porsche Cayman 718
+    
+        function printMyPorsche() {
+            console.log('Porsche Cayman 718');
+        }
+    }
+}
+
+myFunction();
+
+//Problems with hoisting:
