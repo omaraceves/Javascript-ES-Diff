@@ -130,4 +130,30 @@ function myFunction() {
 
 myFunction();
 
-//Problems with hoisting:
+//Problems with hoisting and function scope variables:
+//Hoisting and function scope for var is just the way javascript treats var.
+//That's why on ES6 let and const were introduced.
+//let and const declare block scope variables not function scope.
+
+let car = 'Porsche 718'
+function myFunction(flag) {
+    if(flag)
+    {
+        let car = '911';
+        return car //the car returned here is the variable declared withing the if block
+    }
+
+    return car; //the car returned here is the global variable declared outside of the function
+}
+
+console.log(myFunction(false)); //Porsche 718
+console.log(myFunction(true)); //911
+
+//let and const are hoisted, however they remain in a deadzone until they are initialized withing the scope
+
+function myFunction() {
+    console.log(car); //ReferenceError: Cannot access 'car' before initialization
+    let car = '718 Cayman'
+}
+myFunction();
+
