@@ -2,19 +2,20 @@
 //As seen on: https://exploringjs.com/es6/ch_core-features.html#sec_from-iifes-to-blocks
 
 //In ES5, you had to use a pattern called IIFE (Immediately-Invoked Function Expression) 
-//if you wanted to restrict the scope of a variable tmp to a block
+//if you wanted to restrict the scope of a variable tmp to a block.
+//With this pattern you immediately execute a function, since var is function scoped, 
+//you can encapsulate any var declared inside the immediately-invoked function.
 
-(function () {  // open IIFE
-    var temp = 'Hello World';
-}());  // close IIFE
+function myFunction()
+{
+    (function () {  // open IIFE
+        var temp = 'Hello World';
+    }()); // close IIFE
 
-console.log(tmp); //ReferenceError: tmp is not defined
+    console.log(temp); //ReferenceError: temp is not defined
+}
 
-//Without IIFE
-function myFunction () {  
-    var tmp = 'Hello Function';
-}; 
-console.log(tmp); //Hello World
+myFunction();
 
 
 //In ECMAScript 6, you can simply use a block and a let declaration (or a const declaration):
