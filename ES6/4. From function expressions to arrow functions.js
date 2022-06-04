@@ -45,5 +45,24 @@ var myPorsche = new Porsche('718 Cayman');
 console.log(myPorsche.getFullName()); //'Porsche 718 Cayman'
 
 
+//ES5 Solution 2: specifying a value for this 
+//A few Array methods have an extra parameter for specifying the value that this should have when invoking the callback.
+//this of course will only works with the mentioned set of array functions
+
+function Prefixer(prefix) {
+    this.prefix = prefix;
+}
+Prefixer.prototype.prefixArray = function (arr) {
+    return arr.map(function (x) {
+        return this.prefix + ' ' + x;
+    }, this); // (A)
+};
+
+var myArray = ['Cayman 718'];
+var prefix = new Prefixer('Porsche');
+console.log(prefix.prefixArray(myArray)); //[ 'Porsche Cayman 718' ]
+
+
+
 
 
