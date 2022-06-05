@@ -1,4 +1,4 @@
-//As seen on: https://exploringjs.com/es6/ch_core-features.html#sec_from-func-expr-to-arrow-func
+//As seen on: https://exploringjs.com/es6/ch_arrow-functions.html#ch_arrow-functions
 
 // In JavaScript, traditional functions can be used as 1 Non-method functions, 2 Methods and 3 Constructors
 //These roles clash: Due to roles 2 and 3, functions always have their own this. 
@@ -61,6 +61,29 @@ Prefixer.prototype.prefixArray = function (arr) {
 var myArray = ['Cayman 718'];
 var prefix = new Prefixer('Porsche');
 console.log(prefix.prefixArray(myArray)); //[ 'Porsche Cayman 718' ]
+
+//ES5 Solution 3: bind(this)
+//You can use the method bind() to convert a function whose this is determined by how it is called 
+//(via call(), a function call, a method call, etc.) to a function whose this is always the same fixed value
+
+function Porsche(name) {
+    this.name = name;
+}
+
+//method
+Porsche.prototype.getFullName = function () {
+    
+    //non-method in this case, an IIFE
+    return (function() { // open IIFE
+        return `Porsche ${this.name}`; 
+    }.bind(this))(); //the value for this will be fixed. The this object of the bound function is associated with the specified object.
+};
+
+var myPorsche = new Porsche('718 Cayman');
+console.log(myPorsche.getFullName()); //Porsche 718 Cayman
+console.log(myPorsche);
+
+
 
 
 
