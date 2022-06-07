@@ -83,6 +83,60 @@ var myPorsche = new Porsche('718 Cayman');
 console.log(myPorsche.getFullName()); //Porsche 718 Cayman
 console.log(myPorsche);
 
+//ES6 solution: arrow functions 
+//Arrow functions work much like ES5 solution 3.  However, it’s best to think of them as a new kind of functions that don’t lexically shadow this. 
+//That is, they are different from normal functions (you could even say that they do less). They are not normal functions plus binding.
+//With an arrow function, the code looks as follows.
+
+function Prefixer(prefix) {
+    this.prefix = prefix;
+}
+Prefixer.prototype.prefixArray = function (arr) {
+    return arr.map((x) => {
+        return this.prefix + ' ' + x;
+    });
+};
+
+var myArray = ['Cayman 718'];
+var prefix = new Prefixer('Porsche');
+console.log(prefix.prefixArray(myArray)); //[ 'Porsche Cayman 718' ]
+
+//To fully ES6-ify the code, you’d use a class and a more compact variant of arrow functions.
+//In line A we save a few characters by tweaking two parts of the arrow function:
+//If there is only one parameter and that parameter is an identifier then the parentheses can be omitted.
+//An expression following the arrow leads to that expression being returned.
+//Plus we're adding template literals in line A
+
+class Prefixer {
+    constructor(prefix) {
+        this.prefix = prefix;
+    }
+    prefixArray(arr) {
+        return arr.map(x => `${this.prefix} ${x}`); // (A)
+    }
+}
+
+var myArray = ['Cayman 718', '911', 'Panamera'];
+var prefix = new Prefixer('Porsche');
+console.log(prefix.prefixArray(myArray)); //[ 'Porsche Cayman 718', 'Porsche 911', 'Porsche Panamera' ]
+
+//Arrow Function Syntax: THIS IS IMPORTANT
+
+//Specifying parameters:
+() => { /*...*/ } // no parameter
+x => { /*...*/ } // one parameter, an identifier
+(x, y) => { /*...*/ } // several parameters
+
+//Specifying a body:
+//The statement block behaves like a normal function body. 
+//For example, you need return to give back a value. With an expression body, the expression is always implicitly returned.
+
+x => { return x * x }  // block
+x => x * x  // expression, equivalent to previous line
+
+//Arrow functions: Syntax pitfalls 
+
+
 
 
 
