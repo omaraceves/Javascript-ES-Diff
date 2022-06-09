@@ -50,3 +50,5 @@ console.log(writable, configurable); // true true
 
 
 
+
+
