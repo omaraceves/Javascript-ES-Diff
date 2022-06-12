@@ -47,6 +47,15 @@ Employee.prototype.describe = function () {
 
 //ES6 has built-in support for subclassing, via the extends clause
 
+class Person {
+    constructor(name) {
+        this.name = name;
+    }// no commas between the parts of a class
+    describe() { //for method definitions no keyword function is needed
+        return 'Person called ' + this.name;
+    }
+}
+
 class Employee extends Person {
     constructor(name, title) {
         super(name);
@@ -59,4 +68,4 @@ class Employee extends Person {
 
 
 let employee = new Employee('Popa', 'Director');
-console.log(employee.describe());
+console.log(employee.describe()); //Person called Popa (Director)n
