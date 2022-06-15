@@ -67,3 +67,11 @@ var arr3 = Array.apply(null, new Array(2))
 // ES6 
 let arr3 = new Array(2).fill('Porsche');
 console.log(arr3); // [ 'Porsche', 'Porsche' ]
+
+//fill() replaces all Array elements with the given value. Holes are treated as if they were elements.
+
+let arr4 = ['BMW', 'Ford'];
+arr4.fill('Porsche');
+console.log(arr4); // [ 'Porsche', 'Porsche' ]
+
+
