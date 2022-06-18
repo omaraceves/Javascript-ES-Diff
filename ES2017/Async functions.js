@@ -95,3 +95,65 @@ async function printCar(name) {
 printCar('911'); //Porsche 911
 
 //Handling multiple asynchronous results in parallel
+
+async function getBrand() {
+    return 'Porsche';
+}
+
+async function getCarName() {
+    return '911 Turbo S';
+}
+
+function printCar() {
+    return Promise.all([
+        getBrand(),
+        getCarName()
+    ])
+    .then(([result1, result2]) => 
+        console.log(`${result1} ${result2}`));
+}
+
+printCar(); //Porsche 911 Turbo S
+
+//Handling multiple results with await
+
+async function getBrand() {
+    return 'Toyota';
+}
+
+async function getCarName() {
+    return '4runner TRD Pro';
+}
+
+async function printCar() {
+    const [result1, result2] = await Promise.all([
+            getBrand(),
+            getCarName()
+        ]);
+
+    console.log(`${result1} ${result2}`);
+}
+
+printCar(); //Toyota 4runner TRD Pro
+
+//Catching Errors
+//await allow us to use a traditional try catch block while calling an async function
+//in a way, await allow us to get rid of the .then() .catch() way of handling promises.
+
+async function callError() {
+    throw new Error('This Failed!');
+}
+
+async function myFunction() {
+    try {
+        await callError();
+    } catch(err) {
+        console.error(err); //Error: This Failed!
+    }
+}
+
+myFunction();
+
+//continue with https://exploringjs.com/es2016-es2017/ch_async-functions.html#_async-functions-are-started-synchronously-settled-asynchronously
+
+
