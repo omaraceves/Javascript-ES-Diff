@@ -154,6 +154,35 @@ async function myFunction() {
 
 myFunction();
 
-//continue with https://exploringjs.com/es2016-es2017/ch_async-functions.html#_async-functions-are-started-synchronously-settled-asynchronously
+
+//Async functions are started synchronously, settled asynchronously
+//This is how async functions are executed:
+// The result of an async function is always a Promise p. That Promise is created when starting the execution of the async function.
+// The body is executed. Execution may finish permanently via return or throw. Or it may finish temporarily via await; in which case execution will usually continue later on.
+// The Promise p is returned.
+
+//While executing the body of the async function, return x resolves the Promise p with x, 
+//while throw err rejects p with err. The notification of a settlement happens asynchronously. 
+//In other words: the callbacks of then() and catch() are always executed after the current code is finished.
+
+//The following code demonstrates how that works:
+
+async function asyncFunc() {
+    console.log('asyncFunc() started synchronously'); // (A)
+    return 'abc';
+}
+asyncFunc().
+then(x => console.log(`Asynchronously Resolved: ${x}`)); // (B)
+console.log('Current code is finished'); // (C)
+
+// asyncFunc() started synchronously
+// Current code is finished
+// Asynchronously Resolved: abc
+
+//You can rely on the following order:
+
+//Line (A): the async function is started synchronously. The async function’s Promise is resolved via return.
+//Line (C): execution continues.
+//Line (B): Notification of Promise resolution happens asynchronously.
 
 
