@@ -186,3 +186,65 @@ console.log('Current code is finished'); // (C)
 //Line (B): Notification of Promise resolution happens asynchronously.
 
 
+//Async functions: Returned Promises are not wrapped
+
+//you can return a Promise and that Promise won’t be wrapped in a Promise
+
+async function myFunction() {
+    return Promise.resolve('Porsche');
+}
+
+myFunction().then(x => console.log(x)); //Porsche
+
+//Returning a rejected Promise leads to the result 
+//of the async function being rejected (normally, you’d use throw for that)
+
+async function myFunction() {
+    return Promise.reject(new Error('Error!'));
+}
+
+myFunction().catch(err => console.error(err)); //Error!
+
+//That is in line with how Promise resolution works. 
+//It enables you to forward both fulfillments and rejections of another asynchronous computation, 
+//without an await:
+
+async function getBrandAsync() {
+    return 'Porsche';
+}
+
+async function myFunction() {
+    return getBrandAsync();
+}
+
+myFunction().then(x => console.log(x)); //Porsche
+
+//The previous myFunction code is roughly similar to – but more efficient than – the following code 
+//(which unwraps the Promise of getBrandAsync() only to wrap it again)
+
+async function myFunction() {
+    return await getBrandAsync(); //notice the await
+}
+
+//Tips for using await: Don't forget await
+//In the following example, brand is set to a Promise, 
+//which is usually not what you want in async functions.
+
+async function getBrandAsync() {
+    return 'Porsche';
+}
+
+async function myFunction() {
+    const brand = getBrandAsync(); // missing await!
+    console.log(brand);
+    console.log('myFunction ends.');
+}
+
+myFunction();
+
+//Promise { 'Porsche' }
+//myFunction ends.
+
+
+
+
