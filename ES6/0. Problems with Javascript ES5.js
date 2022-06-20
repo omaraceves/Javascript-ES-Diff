@@ -1,5 +1,5 @@
 
-//Series of examples to explain diffetent var problems
+//Series of examples to explain different var problems
 
 //var 1: As seen on: https://www.youtube.com/watch?v=XgSjoHgy3Rk
 //var inside functions produces a function scope variable not a block scope variable 

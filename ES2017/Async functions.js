@@ -245,6 +245,34 @@ myFunction();
 //Promise { 'Porsche' }
 //myFunction ends.
 
+//The following example didn't work as I expected. More tomorrow.
+////Tips for using await: Don't forget await 2
+//await can even make sense if an async function doesn’t return anything. 
+//Then its Promise is simply used as a signal for telling the caller that it is finished.
+
+async function step1() {
+    console.log('Executing step 1.');
+    console.log('Step 1 done.');
+}
+
+async function step2() {
+    console.log('Executing step 2.');
+    console.log('Step 2 done.');
+}
+
+
+async function myJob() {
+    await step1();
+    step2();
+    console.log('Finished executing steps');
+}
+
+myJob();
+//step 1
+//Finished executing steps
+//step 2
+
+
 
 
 
