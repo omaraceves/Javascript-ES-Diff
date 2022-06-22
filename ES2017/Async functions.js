@@ -32,7 +32,7 @@ const triggerError = async () => {
 
 triggerError().catch(x => console.log(x)); //Error: Problem!
 
-//await: Handling results and errors of asynchronous computations via await
+//await: Handling results and errors of asynchronous computations via await. 
 //The operator await (which is only allowed inside async functions) waits for its operand, 
 //a Promise, to be settled
 
@@ -245,14 +245,19 @@ myFunction();
 //Promise { 'Porsche' }
 //myFunction ends.
 
-//The following example didn't work as I expected. More tomorrow.
-////Tips for using await: Don't forget await 2
+
+//The following example didn't work as I expected. It is claimed that:
+//"The await in line (A) guarantees that step1() is completely finished before the remainder of foo() is executed."
+//Hoever the execution continues while the timeout is waiting.
+
+
+//Tips for using await: Don't forget await 2
 //await can even make sense if an async function doesn’t return anything. 
 //Then its Promise is simply used as a signal for telling the caller that it is finished.
 
 async function step1() {
     console.log('Executing step 1.');
-    console.log('Step 1 done.');
+    setTimeout(() => console.log('Finished step1'), 3000)
 }
 
 async function step2() {
@@ -262,17 +267,84 @@ async function step2() {
 
 
 async function myJob() {
-    await step1();
+    await step1(); //A
     step2();
     console.log('Finished executing steps');
 }
 
 myJob();
-//step 1
-//Finished executing steps
-//step 2
 
+// Executing step 1.
+// Executing step 2.
+// Step 2 done.
+// Finished executing steps
+// Finished step1
 
+//Tips for using await: You don’t need await if you “fire and forget” 
+//Here, we don’t care when individual writes are finished, only that they are executed in the right order
+//The await in the last line of asyncFunc() ensures 
+//that the function is only fulfilled after the file was successfully closed.
 
+async function asyncFunc() {
+    const writer = openFile('someFile.txt');
+    writer.write('hello'); // don’t wait
+    writer.write('world'); // don’t wait
+    await writer.close(); // wait for file to close
+}
 
+//** This example is not meant to be run.
+
+//Async functions and callbacks: Array.prototype.map()
+//**The following example is not meant to be run 
+
+async function downloadContent(urls) {
+    return urls.map(url => {
+        const content = await httpGet(url); //SyntaxError: await is only valid in async functions and the top level bodies of modules
+        return content;
+    });
+}
+
+//How about using an async arrow function, then?
+
+async function downloadContent(urls) {
+    return urls.map(async (url) => {
+        const content = await httpGet(url);
+        return content;
+    });
+}
+
+//There are two issues with the code above
+//The result is now an Array of Promises, not an Array of strings.
+//The work performed by the callbacks isn’t finished once map() is finished, 
+//because await only pauses the surrounding arrow function and httpGet() is resolved asynchronously. 
+//That means you can’t use await to wait until downloadContent() is finished.
+
+//We can fix both issues via Promise.all()
+
+async function downloadContent(urls) {
+    const promiseArray = urls.map(async (url) => {
+        const content = await httpGet(url);
+        return content;
+    });
+    return await Promise.all(promiseArray);
+}
+
+//The callback for map() doesn’t do much with the result of httpGet(), it only forwards it. 
+//Therefore, we don’t need an async arrow function here, a normal arrow function will do
+
+async function downloadContent(urls) {
+    const promiseArray = urls.map(
+        url => httpGet(url));
+    return await Promise.all(promiseArray);
+}
+
+//There is one small improvement that we still can make: This async function is slightly inefficient – it first unwraps the result of Promise.all() via await, before wrapping it again via return. Given that return doesn’t wrap Promises, we can return the result of Promise.all() directly:
+
+async function downloadContent(urls) {
+    const promiseArray = urls.map(
+        url => httpGet(url));
+    return Promise.all(promiseArray);
+}
+
+//Working example of this ^ tomorrow
 
