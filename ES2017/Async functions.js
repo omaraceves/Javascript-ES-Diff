@@ -297,54 +297,91 @@ async function asyncFunc() {
 //Async functions and callbacks: Array.prototype.map()
 //**The following example is not meant to be run 
 
-async function downloadContent(urls) {
-    return urls.map(url => {
-        const content = await httpGet(url); //SyntaxError: await is only valid in async functions and the top level bodies of modules
+async function addBrand(carName) {
+    return `Porsche ${carName}`
+}
+
+async function getCars(carNames) {
+    return carNames.map(car => {
+        const content = await addBrand(car); //SyntaxError: await is only valid in async functions and the top level bodies of modules
         return content;
     });
 }
+
+const myCars = ['Cayman', '911', 'Panamera'];
+getCars(myCars);
 
 //How about using an async arrow function, then?
 
-async function downloadContent(urls) {
-    return urls.map(async (url) => {
-        const content = await httpGet(url);
+async function addBrand(carName) {
+    return `Porsche ${carName}`
+}
+
+async function getCars(cars) {
+    return cars.map(async (car) => {
+        const content = await addBrand(car);
         return content;
     });
 }
+
+const myCars = ['Cayman', '911', 'Panamera'];
+getCars(myCars);
 
 //There are two issues with the code above
 //The result is now an Array of Promises, not an Array of strings.
 //The work performed by the callbacks isn’t finished once map() is finished, 
-//because await only pauses the surrounding arrow function and httpGet() is resolved asynchronously. 
-//That means you can’t use await to wait until downloadContent() is finished.
+//because await only pauses the surrounding arrow function and addBrand() is resolved asynchronously. 
+//That means you can’t use await to wait until getCars() is finished.
 
 //We can fix both issues via Promise.all()
 
-async function downloadContent(urls) {
-    const promiseArray = urls.map(async (url) => {
-        const content = await httpGet(url);
+async function addBrand(carName) {
+    return `Porsche ${carName}`
+}
+
+async function getCars(cars) {
+    const promiseArray = cars.map(async (car) => {
+        const content = await addBrand(car);
         return content;
     });
     return await Promise.all(promiseArray);
 }
 
+const myCars = ['Cayman', '911', 'Panamera'];
+const result = getCars(myCars);
+console.log(result); //Promise { <pending> }
+
 //The callback for map() doesn’t do much with the result of httpGet(), it only forwards it. 
 //Therefore, we don’t need an async arrow function here, a normal arrow function will do
 
-async function downloadContent(urls) {
-    const promiseArray = urls.map(
-        url => httpGet(url));
+async function addBrand(carName) {
+    return `Porsche ${carName}`
+}
+
+async function getCars(cars) {
+    const promiseArray = cars.map(
+        car => addBrand(car));
     return await Promise.all(promiseArray);
 }
 
+const myCars = ['Cayman', '911', 'Panamera'];
+const result = getCars(myCars);
+console.log(result); //Promise { <pending> }
+
 //There is one small improvement that we still can make: This async function is slightly inefficient – it first unwraps the result of Promise.all() via await, before wrapping it again via return. Given that return doesn’t wrap Promises, we can return the result of Promise.all() directly:
 
-async function downloadContent(urls) {
-    const promiseArray = urls.map(
-        url => httpGet(url));
+async function addBrand(carName) {
+    return `Porsche ${carName}`
+}
+
+async function getCars(cars) {
+    const promiseArray = cars.map(
+        car => addBrand(car));
     return Promise.all(promiseArray);
 }
 
-//Working example of this ^ tomorrow
+const myCars = ['Cayman', '911', 'Panamera'];
+const result = getCars(myCars);
+result.then(x => console.log(x)); //[ 'Porsche Cayman', 'Porsche 911', 'Porsche Panamera' ]
+
 
